@@ -38,14 +38,12 @@ elif [[ "$CLOUD" == "AWS" ]]; then
   echo "rule.executors._default_.param.secret.access.key=$CLIENT_SECRET" >> "$PROPERTIES_FILE"
 
 elif [[ "$CLOUD" == "GCP" ]]; then
-  CLIENT_EMAIL=$(terraform -chdir="$TERRAFORM_DIR" output -raw gcp-java-producer-client-email)
-  CLIENT_SECRET_ID=$(terraform -chdir="$TERRAFORM_DIR" output -raw gcp-java-producer-client-secret-id)
-  CLIENT_ID=$(terraform -chdir="$TERRAFORM_DIR" output -raw gcp-java-producer-client-id)
+
   CLIENT_SECRET_ENCODED=$(terraform -chdir="$TERRAFORM_DIR" output -raw gcp-java-producer-client-secret)
-  CLIENT_SECRET=$(echo $CLIENT_SECRET_ENCODED | base64 --decode | jq .private_key | tr -d '"')
-  echo "rule.executors._default_.param.client.email=$CLIENT_EMAIL" >> "$PROPERTIES_FILE"
-  echo "rule.executors._default_.param.private.key.id=$CLIENT_SECRET_ID" >> "$PROPERTIES_FILE"
-  echo "rule.executors._default_.param.client.id=$CLIENT_ID" >> "$PROPERTIES_FILE"
-  echo "rule.executors._default_.param.private.key=$CLIENT_SECRET" >> "$PROPERTIES_FILE"
+
+# Experimental:  
+#   Decode private key to JSON file.  
+#   Java app uses GOOGLE_APPLICATION_CREDENTIALS env variable for location of file.  Set in docker-compose.yml.
+  echo $CLIENT_SECRET_ENCODED | base64 --decode > "$PROPERTIES_FILE.gcp.private.json"
 
 fi

@@ -4,5 +4,7 @@ services:
     container_name: producer-recipes
     volumes:
       - ./producer-recipes.properties:/app/producer-recipes.properties
+      - ./producer-recipes.properties.gcp.private.json:/app/producer-recipes.properties.gcp.private.json
     environment:
       - LIST_ALL_INGREDIENTS=true
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/producer-recipes.properties.gcp.private.json

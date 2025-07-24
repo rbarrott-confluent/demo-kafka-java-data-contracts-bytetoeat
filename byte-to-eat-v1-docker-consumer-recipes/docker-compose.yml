@@ -4,3 +4,6 @@ services:
     container_name: consumer-recipes
     volumes:
       - ./consumer-recipes.properties:/app/consumer-recipes.properties
+      - ./consumer-recipes.properties.gcp.private.json:/app/consumer-recipes.properties.gcp.private.json
+    environment:  
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/consumer-recipes.properties.gcp.private.json
